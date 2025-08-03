@@ -5,7 +5,7 @@
 {% block content %}
   <h1>
     {{ task.name }}
-    <a href="#" class="btn btn-danger float-end">Delete</a>
+    <a href="{% url 'tracker:task-delete' pk=task.id %}" class="btn btn-danger float-end">Delete</a>
     <a href="{% url 'tracker:task-update' pk=task.id %}" class="btn btn-secondary float-end me-2">Update</a>
   </h1>
 
