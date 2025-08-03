@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}{{ task.name }}{% endblock %}
+
+{% block content %}
+  <h1>
+    {{ task.name }}
+    <a href="#" class="btn btn-danger float-end">Delete</a>
+    <a href="#" class="btn btn-secondary float-end me-2">Update</a>
+  </h1>
+
+  <div class="card mt-4">
+    <div class="card-body">
+      <h5 class="card-title">Task Details</h5>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item"><strong>Type:</strong> {{ task.task_type.name }}</li>
+        <li class="list-group-item"><strong>Deadline:</strong> {{ task.deadline }}</li>
+        <li class="list-group-item"><strong>Priority:</strong> {{ task.get_priority_display }}</li>
+        <li class="list-group-item"><strong>Status:</strong>
+          {% if task.is_completed %}
+            Completed
+          {% else %}
+            In Progress
+          {% endif %}
+        </li>
+        <li class="list-group-item">
+          <strong>Description:</strong>
+          <p class="mt-2">{{ task.description|linebreaks }}</p>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card mt-4">
+    <div class="card-body">
+      <h5 class="card-title">Assignees</h5>
+      <ul class="list-group list-group-flush">
+        {% for assignee in task.assignees.all %}
+          <li class="list-group-item">
+            {{ assignee.first_name }} {{ assignee.last_name }} ({{ assignee.username }}) - <strong>{{ assignee.position.name }}</strong>
+          </li>
+        {% empty %}
+          <li class="list-group-item">No one is assigned to this task.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+{% endblock %}

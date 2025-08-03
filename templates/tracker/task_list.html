@@ -21,7 +21,7 @@
       <tbody>
         {% for task in task_list %}
           <tr>
-            <td><a href="#">{{ task.name }}</a></td> {# Link to detail view to be added later #}
+            <td><a href="{% url 'tracker:task-detail' pk=task.id %}">{{ task.name }}</a></td>
             <td>
               <span class="badge 
                 {% if task.priority == 'URGENT' %}bg-danger
