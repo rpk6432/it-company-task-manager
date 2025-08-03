@@ -39,3 +39,9 @@ class TaskDetailView(generic.DetailView):
             .prefetch_related("assignees__position")
             .select_related("task_type")
         )
+
+
+class TaskUpdateView(generic.UpdateView):
+    model = Task
+    form_class = TaskForm
+    success_url = reverse_lazy("tracker:task-list")
