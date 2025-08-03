@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}{{ worker.username }}{% endblock %}
+
+{% block content %}
+  <h1>{{ worker.username }} ({{ worker.first_name }} {{ worker.last_name }})</h1>
+  <p><strong>Position:</strong> {{ worker.position.name }}</p>
+
+  <hr>
+
+  <h3>Tasks assigned:</h3>
+  {% if worker.tasks.all %}
+    <ul class="list-group">
+      {% for task in worker.tasks.all %}
+        <li class="list-group-item">
+          <a href="{% url 'tracker:task-detail' pk=task.id %}">{{ task.name }}</a> (Priority: {{ task.get_priority_display }})
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No tasks assigned.</p>
+  {% endif %}
+{% endblock %}

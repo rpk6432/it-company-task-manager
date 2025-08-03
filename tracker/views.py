@@ -60,3 +60,14 @@ class WorkerListView(generic.ListView):
         return Worker.objects.select_related("position").annotate(
             task_count=Count("tasks")
         )
+
+
+class WorkerDetailView(generic.DetailView):
+    model = Worker
+
+    def get_queryset(self) -> QuerySet:
+        return (
+            Worker.objects
+            .select_related("position")
+            .prefetch_related("tasks")
+        )
