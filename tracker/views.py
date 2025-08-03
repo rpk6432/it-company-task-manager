@@ -1,3 +1,4 @@
+from django.db.models import QuerySet
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -20,3 +21,10 @@ class TaskCreateView(generic.CreateView):
 class TaskListView(generic.ListView):
     model = Task
     paginate_by = 10
+
+    def get_queryset(self) -> QuerySet:
+        return (
+            Task.objects
+            .prefetch_related("assignees")
+            .select_related("task_type")
+        )
