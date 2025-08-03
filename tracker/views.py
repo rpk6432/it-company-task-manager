@@ -1,11 +1,11 @@
-from django.db.models import QuerySet
+from django.db.models import Count, QuerySet
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
 
 from .forms import TaskForm
-from .models import Task
+from .models import Task, Worker
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -50,3 +50,13 @@ class TaskUpdateView(generic.UpdateView):
 class TaskDeleteView(generic.DeleteView):
     model = Task
     success_url = reverse_lazy("tracker:task-list")
+
+
+class WorkerListView(generic.ListView):
+    model = Worker
+    paginate_by = 10
+
+    def get_queryset(self) -> QuerySet:
+        return Worker.objects.select_related("position").annotate(
+            task_count=Count("tasks")
+        )
