@@ -5,8 +5,8 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
 
-from .forms import TaskForm
-from .models import Task, Worker
+from .forms import TaskForm, WorkerCreateForm
+from .models import Task
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -74,3 +74,9 @@ class WorkerDetailView(generic.DetailView):
             .select_related("position")
             .prefetch_related("tasks")
         )
+
+
+class WorkerCreateView(generic.CreateView):
+    model = get_user_model()
+    form_class = WorkerCreateForm
+    success_url = reverse_lazy("tracker:worker-list")

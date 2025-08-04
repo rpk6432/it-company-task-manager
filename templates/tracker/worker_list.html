@@ -4,6 +4,7 @@
 
 {% block content %}
   <h1>Workers</h1>
+  <a href="{% url 'tracker:worker-create' %}" class="btn btn-primary float-end">Create Worker</a>
   {% if worker_list %}
     <table class="table">
       <thead>
