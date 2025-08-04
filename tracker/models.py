@@ -24,6 +24,7 @@ class TaskType(models.Model):
 
 
 class Worker(AbstractUser):
+    email = models.EmailField(unique=True)
     position = models.ForeignKey(
         Position,
         on_delete=models.SET_NULL,
