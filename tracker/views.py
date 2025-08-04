@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 
 from .forms import TaskForm, WorkerCreateForm, WorkerUpdateForm
-from .models import Task, Position
+from .models import Task, Position, TaskType
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -110,3 +110,27 @@ class PositionUpdateView(generic.UpdateView):
 class PositionDeleteView(generic.DeleteView):
     model = Position
     success_url = reverse_lazy("tracker:position-list")
+
+
+class TaskTypeListView(generic.ListView):
+    model = TaskType
+    template_name = "tracker/task_type_list.html"
+    context_object_name = "task_type_list"
+    paginate_by = 10
+
+class TaskTypeCreateView(generic.CreateView):
+    model = TaskType
+    fields = "__all__"
+    template_name = "tracker/task_type_form.html"
+    success_url = reverse_lazy("tracker:task-type-list")
+
+class TaskTypeUpdateView(generic.UpdateView):
+    model = TaskType
+    fields = "__all__"
+    template_name = "tracker/task_type_form.html"
+    success_url = reverse_lazy("tracker:task-type-list")
+
+class TaskTypeDeleteView(generic.DeleteView):
+    model = TaskType
+    template_name = "tracker/task_type_confirm_delete.html"
+    success_url = reverse_lazy("tracker:task-type-list")
