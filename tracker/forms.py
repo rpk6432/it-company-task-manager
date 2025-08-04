@@ -31,6 +31,20 @@ class WorkerCreateForm(UserCreationForm):
         )
 
 
+class WorkerUpdateForm(forms.ModelForm):
+    username = forms.CharField(
+        max_length=30,
+        min_length=5,
+        required=True,
+        help_text="",
+        validators=[username_validator]
+    )
+
+    class Meta:
+        model = get_user_model()
+        fields = ["username", "email", "first_name", "last_name", "position"]
+
+
 class TaskForm(forms.ModelForm):
     assignees = forms.ModelMultipleChoiceField(
         queryset=get_user_model().objects.all(),
