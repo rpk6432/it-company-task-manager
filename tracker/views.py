@@ -6,7 +6,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 
 from .forms import TaskForm, WorkerCreateForm, WorkerUpdateForm
-from .models import Task
+from .models import Task, Position
 
 
 def index(request: HttpRequest) -> HttpResponse:
@@ -91,3 +91,22 @@ class WorkerUpdateView(generic.UpdateView):
 class WorkerDeleteView(generic.DeleteView):
     model = get_user_model()
     success_url = reverse_lazy("tracker:worker-list")
+
+
+class PositionListView(generic.ListView):
+    model = Position
+    paginate_by = 10
+
+class PositionCreateView(generic.CreateView):
+    model = Position
+    fields = "__all__"
+    success_url = reverse_lazy("tracker:position-list")
+
+class PositionUpdateView(generic.UpdateView):
+    model = Position
+    fields = "__all__"
+    success_url = reverse_lazy("tracker:position-list")
+
+class PositionDeleteView(generic.DeleteView):
+    model = Position
+    success_url = reverse_lazy("tracker:position-list")
