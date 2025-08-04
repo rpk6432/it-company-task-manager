@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Worker{% endblock %}
+
+{% block content %}
+  <h1>Delete Worker</h1>
+  <p>Are you sure you want to delete the worker: <strong>{{ worker.username }}</strong>?</p>
+  <p>This action cannot be undone.</p>
+
+  <form method="post">
+    {% csrf_token %}
+    <input type="submit" value="Yes, delete" class="btn btn-danger">
+    <a href="{% url 'tracker:worker-detail' pk=worker.id %}" class="btn btn-secondary">Cancel</a>
+  </form>
+{% endblock %}

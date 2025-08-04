@@ -86,3 +86,8 @@ class WorkerUpdateView(generic.UpdateView):
     model = get_user_model()
     form_class = WorkerUpdateForm
     success_url = reverse_lazy("tracker:worker-list")
+
+
+class WorkerDeleteView(generic.DeleteView):
+    model = get_user_model()
+    success_url = reverse_lazy("tracker:worker-list")

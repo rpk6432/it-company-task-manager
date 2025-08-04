@@ -4,7 +4,8 @@
 
 {% block content %}
   <h1>{{ worker.username }} ({{ worker.first_name }} {{ worker.last_name }})</h1>
-  <a href="{% url 'tracker:worker-update' pk=worker.id %}" class="btn btn-secondary float-end">Update</a>
+    <a href="{% url 'tracker:worker-delete' pk=worker.id %}" class="btn btn-danger float-end">Delete</a>
+    <a href="{% url 'tracker:worker-update' pk=worker.id %}" class="btn btn-secondary float-end me-2">Update</a>
   <p><strong>Position:</strong> {{ worker.position.name }}</p>
 
   <hr>
