@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db.models import Count, QuerySet
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render
@@ -53,21 +54,23 @@ class TaskDeleteView(generic.DeleteView):
 
 
 class WorkerListView(generic.ListView):
-    model = Worker
+    model = get_user_model()
     paginate_by = 10
 
     def get_queryset(self) -> QuerySet:
-        return Worker.objects.select_related("position").annotate(
-            task_count=Count("tasks")
+        return (
+            self.model.objects
+            .select_related("position")
+            .annotate(task_count=Count("tasks"))
         )
 
 
 class WorkerDetailView(generic.DetailView):
-    model = Worker
+    model = get_user_model()
 
     def get_queryset(self) -> QuerySet:
         return (
-            Worker.objects
+            self.model.objects
             .select_related("position")
             .prefetch_related("tasks")
         )
