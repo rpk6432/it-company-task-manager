@@ -1,5 +1,6 @@
 <div class="d-flex flex-column flex-shrink-0 p-3 text-white bg-dark" style="min-height: 100vh;">
-  <a href="{% url 'tracker:index' %}" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+  <a href="{% url 'tracker:index' %}"
+     class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
     <span class="fs-4">IT Task Manager</span>
   </a>
   <hr>
@@ -15,10 +16,10 @@
         <a href="{% url 'tracker:worker-list' %}" class="nav-link text-white">Workers</a>
       </li>
       <li>
-    <a href="{% url 'tracker:position-list' %}" class="nav-link text-white">Positions</a>
+        <a href="{% url 'tracker:position-list' %}" class="nav-link text-white">Positions</a>
       </li>
       <li>
-    <a href="{% url 'tracker:task-type-list' %}" class="nav-link text-white">Task Types</a>
+        <a href="{% url 'tracker:task-type-list' %}" class="nav-link text-white">Task Types</a>
       </li>
       <li>
         <a href="#" class="nav-link text-white">My Tasks</a> {# Link to be added later #}
@@ -28,16 +29,24 @@
   <hr>
   {% if user.is_authenticated %}
     <div class="dropdown">
-      <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+      <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1"
+         data-bs-toggle="dropdown" aria-expanded="false">
         <strong>{{ user.username }}</strong>
       </a>
       <ul class="dropdown-menu dropdown-menu-dark text-small shadow" aria-labelledby="dropdownUser1">
-        <li><a class="dropdown-item" href="#">Profile</a></li> {# Link to be added later #}
-        <li><hr class="dropdown-divider"></li>
-        <li><a class="dropdown-item" href="#">Sign out</a></li> {# Link to be added later #}
+        <li><a class="dropdown-item" href="{% url 'tracker:worker-detail' pk=user.pk %}">Profile</a></li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+        <li>
+          <form action="{% url 'logout' %}" method="post" class="d-inline">
+            {% csrf_token %}
+            <button type="submit" class="dropdown-item">Sign out</button>
+          </form>
+        </li>
       </ul>
     </div>
   {% else %}
-    <a href="#" class="btn btn-primary">Login</a> {# Link to be added later #}
+    <a href="{% url 'login' %}" class="btn btn-primary">Login</a>
   {% endif %}
 </div>
