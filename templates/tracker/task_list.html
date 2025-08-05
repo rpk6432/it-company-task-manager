@@ -4,7 +4,7 @@
 
 {% block content %}
   <h1>
-    Task List
+    {{ page_title|default:"Task List" }}
     <a href="{% url 'tracker:task-create' %}" class="btn btn-primary float-end">Create Task</a>
   </h1>
 

@@ -55,6 +55,25 @@ class TaskDeleteView(LoginRequiredMixin, generic.DeleteView):
     success_url = reverse_lazy("tracker:task-list")
 
 
+class MyTaskListView(LoginRequiredMixin, generic.ListView):
+    model = Task
+    template_name = "tracker/task_list.html"
+    context_object_name = "task_list"
+    paginate_by = 10
+
+    def get_queryset(self) -> QuerySet:
+        return (
+            self.request.user.tasks.all()
+            .prefetch_related("assignees")
+            .select_related("task_type")
+        )
+
+    def get_context_data(self, **kwargs) -> dict:
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "My Tasks"
+        return context
+
+
 class WorkerListView(LoginRequiredMixin, generic.ListView):
     model = get_user_model()
     paginate_by = 10
