@@ -30,6 +30,7 @@ class TaskListView(LoginRequiredMixin, generic.ListView):
             Task.objects
             .prefetch_related("assignees")
             .select_related("task_type")
+            .order_by("is_completed", "deadline")
         )
 
 
@@ -66,6 +67,7 @@ class MyTaskListView(LoginRequiredMixin, generic.ListView):
             self.request.user.tasks.all()
             .prefetch_related("assignees")
             .select_related("task_type")
+            .order_by("is_completed", "deadline")
         )
 
     def get_context_data(self, **kwargs) -> dict:
