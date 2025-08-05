@@ -8,6 +8,8 @@ from django.urls import reverse_lazy, reverse
 from django.views import generic
 from django.views.decorators.http import require_POST
 
+from datetime import date
+
 from .models import Task, Position, TaskType
 from .forms import (
     TaskForm,
@@ -20,8 +22,23 @@ from .forms import (
 
 @login_required
 def index(request: HttpRequest) -> HttpResponse:
-    return render(request, "tracker/index.html")
+    user = request.user
+    my_tasks = user.tasks.all()
 
+    context = {
+        "my_active_tasks_count": my_tasks.filter(is_completed=False).count(),
+        "my_overdue_tasks_count": my_tasks.filter(
+            is_completed=False, deadline__lt=date.today()
+        ).count(),
+        "my_upcoming_deadlines": (
+            my_tasks.filter(is_completed=False).order_by("deadline")[:5]
+        ),
+        "total_tasks_count": Task.objects.count(),
+        "completed_tasks_count": Task.objects.filter(is_completed=True).count(),
+        "total_workers_count": get_user_model().objects.count(),
+    }
+
+    return render(request, "tracker/index.html", context=context)
 
 @login_required
 @require_POST

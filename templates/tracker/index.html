@@ -4,5 +4,61 @@
 
 {% block content %}
   <h1>Dashboard</h1>
-  <p>Welcome to the IT Company Task Manager!</p>
+  <p>Welcome, {{ user.first_name|default:user.username }}!</p>
+
+  <div class="row mt-4">
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h4 class="card-title">
+            <a href="{% url 'tracker:my-task-list' %}" class="text-decoration-none">My Active Tasks</a>
+          </h4>
+          <p class="card-text fs-2">{{ my_active_tasks_count }}</p>
+          {% if my_overdue_tasks_count > 0 %}
+            <p class="card-text text-danger">{{ my_overdue_tasks_count }} task(s) overdue</p>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card mb-4">
+        <div class="card-body">
+          <h4 class="card-title">Upcoming Deadlines</h4>
+          <ul class="list-group list-group-flush">
+            {% for task in my_upcoming_deadlines %}
+              <li class="list-group-item">
+                <a href="{{ task.get_absolute_url }}">{{ task.name }}</a>
+                <span class="float-end">{{ task.deadline }}</span>
+              </li>
+            {% empty %}
+              <li class="list-group-item">No upcoming tasks.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <hr>
+
+  <h3>System Overview</h3>
+  <div class="row mt-4">
+    <div class="col-md-6">
+       <div class="card mb-4">
+        <div class="card-body">
+          <h4 class="card-title">Tasks in System</h4>
+          <p class="card-text">Total: {{ total_tasks_count }}</p>
+          <p class="card-text">Completed: {{ completed_tasks_count }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+       <div class="card mb-4">
+        <div class="card-body">
+          <h4 class="card-title">Team</h4>
+          <p class="card-text">Total workers: {{ total_workers_count }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
 {% endblock %}
