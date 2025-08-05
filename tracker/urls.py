@@ -2,6 +2,7 @@ from django.urls import path
 
 from .views import (
     index,
+    toggle_task_status,
     TaskListView,
     TaskCreateView,
     TaskDetailView,
@@ -20,7 +21,7 @@ from .views import (
     TaskTypeListView,
     TaskTypeCreateView,
     TaskTypeUpdateView,
-    TaskTypeDeleteView
+    TaskTypeDeleteView,
 )
 
 app_name = "tracker"
@@ -46,4 +47,5 @@ urlpatterns = [
     path("task-types/create/", TaskTypeCreateView.as_view(), name="task-type-create"),
     path("task-types/<int:pk>/update/", TaskTypeUpdateView.as_view(), name="task-type-update"),
     path("task-types/<int:pk>/delete/", TaskTypeDeleteView.as_view(), name="task-type-delete"),
+    path("tasks/<int:pk>/toggle-status/", toggle_task_status, name="task-toggle-status"),
 ]

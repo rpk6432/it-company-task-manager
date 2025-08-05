@@ -2,10 +2,11 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Count, QuerySet
-from django.http import HttpRequest, HttpResponse
-from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.http import HttpRequest, HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
+from django.urls import reverse_lazy, reverse
 from django.views import generic
+from django.views.decorators.http import require_POST
 
 from .models import Task, Position, TaskType
 from .forms import (
@@ -20,6 +21,17 @@ from .forms import (
 @login_required
 def index(request: HttpRequest) -> HttpResponse:
     return render(request, "tracker/index.html")
+
+
+@login_required
+@require_POST
+def toggle_task_status(request, pk: int) -> HttpResponseRedirect:
+    task = get_object_or_404(Task, pk=pk)
+    task.is_completed = not task.is_completed
+    task.save()
+    return HttpResponseRedirect(
+        reverse("tracker:task-detail", kwargs={"pk": pk})
+    )
 
 
 class TaskCreateView(LoginRequiredMixin, generic.CreateView):

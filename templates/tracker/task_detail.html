@@ -7,6 +7,16 @@
     {{ task.name }}
     <a href="{% url 'tracker:task-delete' pk=task.id %}" class="btn btn-danger float-end">Delete</a>
     <a href="{% url 'tracker:task-update' pk=task.id %}" class="btn btn-secondary float-end me-2">Update</a>
+
+    <form action="{% url 'tracker:task-toggle-status' pk=task.id %}" method="post" class="float-end me-2">
+      {% csrf_token %}
+      {% if task.is_completed %}
+        <button type="submit" class="btn btn-warning">Re-open Task</button>
+      {% else %}
+        <button type="submit" class="btn btn-success">Complete Task</button>
+      {% endif %}
+    </form>
+
   </h1>
 
   <div class="card mt-4">
@@ -37,7 +47,8 @@
       <ul class="list-group list-group-flush">
         {% for assignee in task.assignees.all %}
           <li class="list-group-item">
-            {{ assignee.first_name }} {{ assignee.last_name }} ({{ assignee.username }}) - <strong>{{ assignee.position.name }}</strong>
+            {{ assignee.first_name }} {{ assignee.last_name }} ({{ assignee.username }}) -
+            <strong>{{ assignee.position.name }}</strong>
           </li>
         {% empty %}
           <li class="list-group-item">No one is assigned to this task.</li>
