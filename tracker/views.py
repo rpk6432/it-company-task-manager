@@ -7,8 +7,14 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic
 
-from .forms import TaskForm, WorkerCreateForm, WorkerUpdateForm
 from .models import Task, Position, TaskType
+from .forms import (
+    TaskForm,
+    WorkerCreateForm,
+    WorkerUpdateForm,
+    WorkerSearchForm
+)
+
 
 @login_required
 def index(request: HttpRequest) -> HttpResponse:
@@ -80,12 +86,29 @@ class WorkerListView(LoginRequiredMixin, generic.ListView):
     model = get_user_model()
     paginate_by = 10
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        username = self.request.GET.get("username", "")
+        context["search_form"] = WorkerSearchForm(
+            initial={"username": username}
+        )
+        return context
+
     def get_queryset(self) -> QuerySet:
-        return (
+        queryset = (
             self.model.objects
             .select_related("position")
             .annotate(task_count=Count("tasks"))
         )
+
+        form = WorkerSearchForm(self.request.GET)
+
+        if form.is_valid():
+            return queryset.filter(
+                username__icontains=form.cleaned_data["username"]
+            )
+
+        return queryset
 
 
 class WorkerDetailView(LoginRequiredMixin, generic.DetailView):

@@ -1,10 +1,21 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block title %}Workers{% endblock %}
 
 {% block content %}
-  <h1>Workers</h1>
-  <a href="{% url 'tracker:worker-create' %}" class="btn btn-primary float-end">Create Worker</a>
+  <h1>
+    Workers
+    <a href="{% url 'tracker:worker-create' %}" class="btn btn-primary float-end">Create Worker</a>
+  </h1>
+
+  <form method="get" action="" class="my-4">
+    <div class="input-group">
+      {{ search_form|crispy }}
+      <button class="btn btn-outline-secondary" type="submit">Search</button>
+    </div>
+  </form>
+
   {% if worker_list %}
     <table class="table">
       <thead>
@@ -27,6 +38,6 @@
       </tbody>
     </table>
   {% else %}
-    <p>There are no workers in the system.</p>
+    <p>There are no workers matching your search.</p>
   {% endif %}
 {% endblock %}
