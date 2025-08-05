@@ -12,7 +12,8 @@ from .forms import (
     TaskForm,
     WorkerCreateForm,
     WorkerUpdateForm,
-    WorkerSearchForm
+    WorkerSearchForm,
+    TaskSearchForm,
 )
 
 
@@ -31,13 +32,29 @@ class TaskListView(LoginRequiredMixin, generic.ListView):
     model = Task
     paginate_by = 10
 
+    def get_context_data(self, **kwargs) -> dict:
+        context = super().get_context_data(**kwargs)
+        name_query = self.request.GET.get("name", "")
+
+        context["search_form"] = TaskSearchForm(
+            initial={"name": name_query}
+        )
+        return context
+
     def get_queryset(self) -> QuerySet:
-        return (
-            Task.objects
-            .prefetch_related("assignees")
+        queryset = (
+            Task.objects.prefetch_related("assignees")
             .select_related("task_type")
             .order_by("is_completed", "deadline")
         )
+        form = TaskSearchForm(self.request.GET)
+
+        if form.is_valid():
+            return queryset.filter(
+                name__icontains=form.cleaned_data["name"]
+            )
+
+        return queryset
 
 
 class TaskDetailView(LoginRequiredMixin, generic.DetailView):
@@ -68,18 +85,31 @@ class MyTaskListView(LoginRequiredMixin, generic.ListView):
     context_object_name = "task_list"
     paginate_by = 10
 
+    def get_context_data(self, **kwargs) -> dict:
+        context = super().get_context_data(**kwargs)
+        name_query = self.request.GET.get("name", "")
+
+        context["search_form"] = TaskSearchForm(
+            initial={"name": name_query}
+        )
+        context["page_title"] = "My Tasks"
+        return context
+
     def get_queryset(self) -> QuerySet:
-        return (
+        queryset = (
             self.request.user.tasks.all()
             .prefetch_related("assignees")
             .select_related("task_type")
             .order_by("is_completed", "deadline")
         )
+        form = TaskSearchForm(self.request.GET)
 
-    def get_context_data(self, **kwargs) -> dict:
-        context = super().get_context_data(**kwargs)
-        context["page_title"] = "My Tasks"
-        return context
+        if form.is_valid():
+            return queryset.filter(
+                name__icontains=form.cleaned_data["name"]
+            )
+
+        return queryset
 
 
 class WorkerListView(LoginRequiredMixin, generic.ListView):

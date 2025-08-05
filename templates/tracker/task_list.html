@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block title %}{{ page_title|default:"All Tasks" }}{% endblock %}
 
@@ -8,82 +9,57 @@
     <a href="{% url 'tracker:task-create' %}" class="btn btn-primary float-end">Create Task</a>
   </h1>
 
+  <form method="get" action="" class="my-4">
+    <div class="input-group">
+      {{ search_form|crispy }}
+      <button class="btn btn-outline-secondary" type="submit">Search</button>
+    </div>
+  </form>
+
   {% if task_list %}
     <table class="table table-hover mt-4">
       <thead>
-        <tr>
-          <th>Name</th>
-          <th>Priority</th>
-          <th>Deadline</th>
-          <th>Completed</th>
-        </tr>
+      <tr>
+        <th>Name</th>
+        <th>Priority</th>
+        <th>Deadline</th>
+        <th>Completed</th>
+      </tr>
       </thead>
       <tbody>
-        {% for task in task_list %}
-          {% ifchanged task.is_completed %}
-            {% if task.is_completed %}
+      {% for task in task_list %}
+
+        {% ifchanged task.is_completed %}
+          {% if task.is_completed %}
             <tr>
               <td colspan="4" class="text-center bg-light fw-bold">Completed Tasks</td>
             </tr>
-            {% endif %}
-          {% endifchanged %}
-          <tr>
-            <td><a href="{% url 'tracker:task-detail' pk=task.id %}">{{ task.name }}</a></td>
-            <td>
+          {% endif %}
+        {% endifchanged %}
+
+        <tr>
+          <td><a href="{% url 'tracker:task-detail' pk=task.id %}">{{ task.name }}</a></td>
+          <td>
               <span class="badge
                 {% if task.priority == 'URGENT' %}bg-danger
                 {% elif task.priority == 'HIGH' %}bg-warning
                 {% else %}bg-secondary{% endif %}">
                 {{ task.get_priority_display }}
               </span>
-            </td>
-            <td>{{ task.deadline }}</td>
-            <td>
-              {% if task.is_completed %}
-                <span class="badge bg-success">Yes</span>
-              {% else %}
-                <span class="badge bg-secondary">No</span>
-              {% endif %}
-            </td>
-          </tr>
-        {% endfor %}
+          </td>
+          <td>{{ task.deadline }}</td>
+          <td>
+            {% if task.is_completed %}
+              <span class="badge bg-success">Yes</span>
+            {% else %}
+              <span class="badge bg-secondary">No</span>
+            {% endif %}
+          </td>
+        </tr>
+      {% endfor %}
       </tbody>
     </table>
   {% else %}
-    <p class="mt-4">There are no tasks in the system yet.</p>
-  {% endif %}
-
-  {% if is_paginated %}
-    <nav aria-label="Page navigation">
-      <ul class="pagination justify-content-center">
-        {% if page_obj.has_previous %}
-          <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-          </li>
-        {% else %}
-          <li class="page-item disabled">
-            <a class="page-link" href="#">Previous</a>
-          </li>
-        {% endif %}
-
-        {% for num in page_obj.paginator.page_range %}
-          {% if page_obj.number == num %}
-            <li class="page-item active"><a class="page-link" href="#">{{ num }}</a></li>
-          {% else %}
-            <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
-          {% endif %}
-        {% endfor %}
-
-        {% if page_obj.has_next %}
-          <li class="page-item">
-            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
-          </li>
-        {% else %}
-          <li class="page-item disabled">
-            <a class="page-link" href="#">Next</a>
-          </li>
-        {% endif %}
-      </ul>
-    </nav>
+    <p class="mt-4">There are no tasks matching your search.</p>
   {% endif %}
 {% endblock %}
