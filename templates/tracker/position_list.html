@@ -18,11 +18,17 @@
       {% for position in position_list %}
         <tr>
           <td>{{ position.name }}</td>
-          <td><a href="{% url 'tracker:position-update' pk=position.id %}" class="btn btn-secondary btn-sm">Update</a></td>
+          <td><a href="{% url 'tracker:position-update' pk=position.id %}" class="btn btn-secondary btn-sm">Update</a>
+          </td>
           <td><a href="{% url 'tracker:position-delete' pk=position.id %}" class="btn btn-danger btn-sm">Delete</a></td>
         </tr>
       {% endfor %}
     </table>
+
+    {% if is_paginated %}
+      {% include "includes/pagination.html" %}
+    {% endif %}
+
   {% else %}
     <p>No positions found.</p>
   {% endif %}

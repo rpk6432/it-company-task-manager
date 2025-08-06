@@ -59,6 +59,11 @@
       {% endfor %}
       </tbody>
     </table>
+
+    {% if is_paginated %}
+      {% include "includes/pagination.html" %}
+    {% endif %}
+
   {% else %}
     <p class="mt-4">There are no tasks matching your search.</p>
   {% endif %}
