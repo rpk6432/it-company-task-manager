@@ -55,6 +55,11 @@ class TaskForm(forms.ModelForm):
     class Meta:
         model = Task
         fields = "__all__"
+        widgets = {
+            "deadline": forms.DateInput(
+                attrs={"type": "date"}
+            )
+        }
 
 
 class WorkerSearchForm(forms.Form):
