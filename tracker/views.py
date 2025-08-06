@@ -54,11 +54,13 @@ def toggle_task_status(request, pk: int) -> HttpResponseRedirect:
 class TaskCreateView(LoginRequiredMixin, generic.CreateView):
     model = Task
     form_class = TaskForm
+    template_name = "tracker/task/task_form.html"
     success_url = reverse_lazy("tracker:task-list")
 
 
 class TaskListView(LoginRequiredMixin, generic.ListView):
     model = Task
+    template_name = "tracker/task/task_list.html"
     paginate_by = 10
 
     def get_context_data(self, **kwargs) -> dict:
@@ -88,6 +90,7 @@ class TaskListView(LoginRequiredMixin, generic.ListView):
 
 class TaskDetailView(LoginRequiredMixin, generic.DetailView):
     model = Task
+    template_name = "tracker/task/task_detail.html"
 
     def get_queryset(self) -> QuerySet:
         return (
@@ -100,17 +103,19 @@ class TaskDetailView(LoginRequiredMixin, generic.DetailView):
 class TaskUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Task
     form_class = TaskForm
+    template_name = "tracker/task/task_form.html"
     success_url = reverse_lazy("tracker:task-list")
 
 
 class TaskDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Task
+    template_name = "tracker/task/task_confirm_delete.html"
     success_url = reverse_lazy("tracker:task-list")
 
 
 class MyTaskListView(LoginRequiredMixin, generic.ListView):
     model = Task
-    template_name = "tracker/task_list.html"
+    template_name = "tracker/task/task_list.html"
     context_object_name = "task_list"
     paginate_by = 10
 
@@ -143,6 +148,7 @@ class MyTaskListView(LoginRequiredMixin, generic.ListView):
 
 class WorkerListView(LoginRequiredMixin, generic.ListView):
     model = get_user_model()
+    template_name = "tracker/worker/worker_list.html"
     paginate_by = 10
 
     def get_context_data(self, **kwargs):
@@ -172,6 +178,7 @@ class WorkerListView(LoginRequiredMixin, generic.ListView):
 
 class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
     model = get_user_model()
+    template_name = "tracker/worker/worker_detail.html"
 
     def get_queryset(self) -> QuerySet:
         return (
@@ -184,58 +191,65 @@ class WorkerDetailView(LoginRequiredMixin, generic.DetailView):
 class WorkerCreateView(LoginRequiredMixin, generic.CreateView):
     model = get_user_model()
     form_class = WorkerCreateForm
+    template_name = "tracker/worker/worker_form.html"
     success_url = reverse_lazy("tracker:worker-list")
 
 
 class WorkerUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = get_user_model()
     form_class = WorkerUpdateForm
+    template_name = "tracker/worker/worker_form.html"
     success_url = reverse_lazy("tracker:worker-list")
 
 
 class WorkerDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = get_user_model()
+    template_name = "tracker/worker/worker_confirm_delete.html"
     success_url = reverse_lazy("tracker:worker-list")
 
 
 class PositionListView(LoginRequiredMixin, generic.ListView):
     model = Position
+    template_name = "tracker/position/position_list.html"
     paginate_by = 10
 
 class PositionCreateView(LoginRequiredMixin, generic.CreateView):
     model = Position
     fields = "__all__"
+    template_name = "tracker/position/position_form.html"
     success_url = reverse_lazy("tracker:position-list")
 
 class PositionUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = Position
     fields = "__all__"
+    template_name = "tracker/position/position_form.html"
     success_url = reverse_lazy("tracker:position-list")
 
 class PositionDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Position
+    template_name = "tracker/position/position_confirm_delete.html"
     success_url = reverse_lazy("tracker:position-list")
 
 
 class TaskTypeListView(LoginRequiredMixin, generic.ListView):
     model = TaskType
-    template_name = "tracker/task_type_list.html"
+    template_name = "tracker/task_type/task_type_list.html"
     context_object_name = "task_type_list"
     paginate_by = 10
 
 class TaskTypeCreateView(LoginRequiredMixin, generic.CreateView):
     model = TaskType
     fields = "__all__"
-    template_name = "tracker/task_type_form.html"
+    template_name = "tracker/task_type/task_type_form.html"
     success_url = reverse_lazy("tracker:task-type-list")
 
 class TaskTypeUpdateView(LoginRequiredMixin, generic.UpdateView):
     model = TaskType
     fields = "__all__"
-    template_name = "tracker/task_type_form.html"
+    template_name = "tracker/task_type/task_type_form.html"
     success_url = reverse_lazy("tracker:task-type-list")
 
 class TaskTypeDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = TaskType
-    template_name = "tracker/task_type_confirm_delete.html"
+    template_name = "tracker/task_type/task_type_confirm_delete.html"
     success_url = reverse_lazy("tracker:task-type-list")
