@@ -1,48 +1,93 @@
 {% extends "base.html" %}
-{% load crispy_forms_tags %}
 
 {% block title %}Workers{% endblock %}
 
+{% block page_title %}
+  Workers
+{% endblock %}
+
+{% block page_header_actions %}
+  <div class="col-auto ms-auto d-print-none">
+    <a href="{% url 'tracker:worker-create' %}" class="btn btn-primary">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 17" /><path d="M5 12l17 0" /></svg>
+      Create New Worker
+    </a>
+  </div>
+{% endblock %}
+
 {% block content %}
-  <h1>
-    Workers
-    <a href="{% url 'tracker:worker-create' %}" class="btn btn-primary float-end">Create Worker</a>
-  </h1>
-
-  <form method="get" action="" class="my-4">
-    <div class="input-group">
-      {{ search_form|crispy }}
-      <button class="btn btn-outline-secondary" type="submit">Search</button>
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">All Workers</h3>
+    <div class="ms-auto">
+      <form method="get" action="">
+        <div class="input-group">
+          <input type="text" name="{{ search_form.username.name }}" value="{{ request.GET.username|default:'' }}" class="form-control" placeholder="Search by username…">
+          <button class="btn btn-outline-secondary" type="submit" aria-label="Search">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path><path d="M21 21l-6 -6"></path></svg>
+          </button>
+        </div>
+      </form>
     </div>
-  </form>
-
-  {% if worker_list %}
-    <table class="table">
+  </div>
+  <div class="table-responsive">
+    <table class="table table-vcenter card-table">
       <thead>
-      <tr>
-        <th>Username</th>
-        <th>Full Name</th>
-        <th>Position</th>
-        <th>Tasks Assigned</th>
-      </tr>
+        <tr>
+          <th>Worker</th>
+          <th>Position</th>
+          <th class="text-center">Tasks Assigned</th>
+        </tr>
       </thead>
       <tbody>
       {% for worker in worker_list %}
         <tr>
-          <td><a href="{{ worker.get_absolute_url }}">{{ worker.username }}</a></td>
-          <td>{{ worker.first_name }} {{ worker.last_name }}</td>
-          <td>{{ worker.position.name }}</td>
-          <td>{{ worker.task_count }}</td>
+          <td>
+            <div class="d-flex py-1 align-items-center">
+              <span class="avatar me-2" style="background-image: url('https://ui-avatars.com/api/?name={{ worker.first_name|first|default:'' }}{{ worker.last_name|first|default:'' }}&background=random&size=128')"></span>
+              <div class="flex-fill">
+                <div class="font-weight-medium"><a href="{{ worker.get_absolute_url }}">{{ worker.username }}</a></div>
+                <div class="text-muted">{{ worker.first_name }} {{ worker.last_name }}</div>
+              </div>
+            </div>
+          </td>
+          <td>{{ worker.position.name|default:"-" }}</td>
+          <td class="text-center">{{ worker.task_count }}</td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="3">
+            <div class="empty">
+              <div class="empty-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-users-group" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10 13a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M8 21v-1a2 2 0 0 1 2 -2h4a2 2 0 0 1 2 2v1" /><path d="M15 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M17 10h2a2 2 0 0 1 2 2v1" /><path d="M5 5a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" /><path d="M3 13v-1a2 2 0 0 1 2 -2h2" /></svg>
+              </div>
+              <p class="empty-title">
+                {% if request.GET.username %}
+                  No workers found matching your search
+                {% else %}
+                  No workers have been added yet
+                {% endif %}
+              </p>
+              <p class="empty-subtitle text-muted">
+                Create a new worker to see them listed here.
+              </p>
+              <div class="empty-action">
+                <a href="{% url 'tracker:worker-create' %}" class="btn btn-primary">
+                  Create New Worker
+                </a>
+              </div>
+            </div>
+          </td>
         </tr>
       {% endfor %}
       </tbody>
     </table>
+  </div>
 
-    {% if is_paginated %}
+  {% if is_paginated %}
+    <div class="card-footer">
       {% include "includes/pagination.html" %}
-    {% endif %}
-
-  {% else %}
-    <p>There are no workers matching your search.</p>
+    </div>
   {% endif %}
+</div>
 {% endblock %}
