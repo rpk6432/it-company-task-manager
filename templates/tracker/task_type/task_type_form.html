@@ -3,11 +3,21 @@
 
 {% block title %}{{ object|yesno:"Update Task Type,Create Task Type" }}{% endblock %}
 
+{% block page_title %}
+  {{ object|yesno:"Update Task Type,Create Task Type" }}
+{% endblock %}
+
 {% block content %}
-  <h1>{{ object|yesno:"Update Task Type,Create Task Type" }}</h1>
-  <form method="post" novalidate>
-    {% csrf_token %}
-    {{ form|crispy }}
-    <input type="submit" value="Submit" class="btn btn-primary mt-3">
-  </form>
+<div class="row">
+  <div class="col-lg-6">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form|crispy }}
+      <div class="mt-4">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <a href="{% url 'tracker:task-type-list' %}" class="btn">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}
