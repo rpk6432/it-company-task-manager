@@ -61,7 +61,7 @@ class TaskCreateView(LoginRequiredMixin, generic.CreateView):
 class TaskListView(LoginRequiredMixin, generic.ListView):
     model = Task
     template_name = "tracker/task/task_list.html"
-    paginate_by = 10
+    paginate_by = 9
 
     def get_context_data(self, **kwargs) -> dict:
         context = super().get_context_data(**kwargs)
@@ -149,7 +149,7 @@ class MyTaskListView(LoginRequiredMixin, generic.ListView):
 class WorkerListView(LoginRequiredMixin, generic.ListView):
     model = get_user_model()
     template_name = "tracker/worker/worker_list.html"
-    paginate_by = 10
+    paginate_by = 8
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
