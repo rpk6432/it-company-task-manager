@@ -1,0 +1,72 @@
+<aside class="navbar navbar-vertical navbar-expand-lg" data-bs-theme="dark">
+  <div class="container-fluid">
+    <h1 class="navbar-brand navbar-brand-autodark">
+      <a href="{% url 'tracker:index' %}">
+        IT Task Manager
+      </a>
+    </h1>
+    <div class="collapse navbar-collapse" id="sidebar-menu">
+      <ul class="navbar-nav pt-lg-3">
+        {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link py-2" href="{% url 'tracker:index' %}">
+              <span class="nav-link-icon d-none d-lg-inline-block">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+              </span>
+              <span class="nav-link-title">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link py-2" href="{% url 'tracker:my-task-list' %}">
+              <span class="nav-link-icon d-none d-lg-inline-block">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clipboard-check" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 14l2 2l4 -4" /></svg>
+              </span>
+              <span class="nav-link-title">My Tasks</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link py-2" href="{% url 'tracker:task-list' %}">
+              <span class="nav-link-icon d-none d-lg-inline-block">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-list-check" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M3.5 5.5l1.5 1.5l2.5 -2.5" /><path d="M3.5 11.5l1.5 1.5l2.5 -2.5" /><path d="M3.5 17.5l1.5 1.5l2.5 -2.5" /><path d="M11 6l9 0" /><path d="M11 12l9 0" /><path d="M11 18l9 0" /></svg>
+              </span>
+              <span class="nav-link-title">All Tasks</span>
+            </a>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle py-2" href="#navbar-manage" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button" aria-expanded="false">
+              <span class="nav-link-icon d-none d-lg-inline-block">
+                 <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-settings" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" /><path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" /></svg>
+              </span>
+              <span class="nav-link-title">Manage</span>
+            </a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="{% url 'tracker:worker-list' %}">Workers</a>
+              <a class="dropdown-item" href="{% url 'tracker:position-list' %}">Positions</a>
+              <a class="dropdown-item" href="{% url 'tracker:task-type-list' %}">Task Types</a>
+            </div>
+          </li>
+
+          <div class="mt-auto">
+            <hr class="my-2">
+            <a href="{% url 'tracker:worker-detail' pk=user.pk %}" class="nav-link d-flex lh-1 text-reset p-3">
+              <span class="avatar avatar-sm me-3" style="background-image: url('https://ui-avatars.com/api/?name={{ user.first_name|first|default:'' }}{{ user.last_name|first|default:'' }}&background=random')"></span>
+              <div class="d-none d-lg-block">
+                <div>{{ user.first_name }} {{ user.last_name }}</div>
+                <div class="mt-1 small text-muted">{{ user.position.name }}</div>
+              </div>
+            </a>
+            <form action="{% url 'logout' %}" method="post" class="w-100">
+              {% csrf_token %}
+              <button type="submit" class="nav-link py-2 w-100 border-0 bg-transparent text-start">
+                <span class="nav-link-icon d-none d-lg-inline-block">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-logout" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M14 8v-2a2 2 0 0 0 -2 -2h-7a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h7a2 2 0 0 0 2 -2v-2" /><path d="M9 12h12l-3 -3" /><path d="M18 15l3 -3" /></svg>
+                </span>
+                <span class="nav-link-title">Logout</span>
+              </button>
+            </form>
+          </div>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</aside>

@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Profile: {{ worker.username }}{% endblock %}
+
+{% block page_title %}
+  Worker Profile
+{% endblock %}
+
+{% block page_header_actions %}
+  <div class="col-auto ms-auto d-print-none">
+    <a href="{% url 'tracker:worker-update' pk=worker.id %}" class="btn btn-secondary">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-edit" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M7 7h-1a2 2 0 0 0 -2 2v9a2 2 0 0 0 2 2h9a2 2 0 0 0 2 -2v-1" /><path d="M20.385 6.585a2.1 2.1 0 0 0 -2.97 -2.97l-8.415 8.385v3h3l8.385 -8.415z" /><path d="M16 5l3 3" /></svg>
+      Update
+    </a>
+    <a href="{% url 'tracker:worker-delete' pk=worker.id %}" class="btn btn-danger">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M4 7l16 0" /><path d="M10 11l0 6" /><path d="M14 11l0 6" /><path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12" /><path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3" /></svg>
+      Delete
+    </a>
+  </div>
+{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-body text-center">
+        <span class="avatar avatar-xl mb-3 rounded" style="background-image: url('https://ui-avatars.com/api/?name={{ worker.first_name|first|default:'' }}{{ worker.last_name|first|default:'' }}&background=random&size=256')"></span>
+        <h3 class="card-title mb-1">{{ worker.first_name }} {{ worker.last_name }}</h3>
+        <p class="text-muted">@{{ worker.username }}</p>
+        <p class="text-muted mt-2">{{ worker.position.name }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-8">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Assigned Tasks</h3>
+      </div>
+      <div class="list-group list-group-flush">
+        {% if worker.tasks.all %}
+          {% for task in worker.tasks.all %}
+            {% if not task.is_completed %}
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <a href="{% url 'tracker:task-detail' pk=task.id %}">{{ task.name }}</a>
+                    <div class="d-block text-muted mt-1">
+                      Priority:
+                      {% if task.priority == 'URGENT' %}
+                        <span class="badge bg-red-lt">Urgent</span>
+                      {% elif task.priority == 'HIGH' %}
+                        <span class="badge bg-orange-lt">High</span>
+                      {% elif task.priority == 'MEDIUM' %}
+                        <span class="badge bg-yellow-lt">Medium</span>
+                      {% else %}
+                        <span class="badge bg-secondary-lt">Low</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <span class="badge bg-azure-lt">In Progress</span>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+
+          {% for task in worker.tasks.all %}
+            {% if task.is_completed %}
+              <div class="list-group-item">
+                <div class="row align-items-center">
+                  <div class="col">
+                    <a href="{% url 'tracker:task-detail' pk=task.id %}" class="text-muted">{{ task.name }}</a>
+                    <div class="d-block text-muted mt-1">
+                      Priority:
+                      {% if task.priority == 'URGENT' %}
+                        <span class="badge bg-red-lt">Urgent</span>
+                      {% elif task.priority == 'HIGH' %}
+                        <span class="badge bg-orange-lt">High</span>
+                      {% elif task.priority == 'MEDIUM' %}
+                        <span class="badge bg-yellow-lt">Medium</span>
+                      {% else %}
+                        <span class="badge bg-secondary-lt">Low</span>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="col-auto">
+                    <span class="badge bg-success-lt">Completed</span>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% else %}
+          <div class="list-group-item">
+            <p class="text-muted text-center py-4">No tasks assigned to this worker.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

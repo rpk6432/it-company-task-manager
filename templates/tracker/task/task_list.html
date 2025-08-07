@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title|default:"Tasks" }}{% endblock %}
+
+{% block page_title %}
+  {{ page_title|default:"Tasks" }}
+{% endblock %}
+
+{% block page_header_actions %}
+  <div class="col-auto ms-auto d-print-none">
+    <a href="{% url 'tracker:task-create' %}" class="btn btn-primary">
+      <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 5l0 17" /><path d="M5 12l17 0" /></svg>
+      Create New Task
+    </a>
+  </div>
+{% endblock %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h3 class="card-title">Task List</h3>
+    <div class="ms-auto">
+      <form method="get" action="">
+        <div class="input-group">
+          <input type="text" name="{{ search_form.name.name }}" value="{{ request.GET.name|default:'' }}" class="form-control" placeholder="Search by name…">
+          <button class="btn btn-outline-secondary" type="submit" aria-label="Search">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"></path><path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path><path d="M21 21l-6 -6"></path></svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-vcenter card-table">
+      <thead>
+        <tr>
+          <th>Task / Type</th>
+          <th>Priority</th>
+          <th>Deadline</th>
+          <th>Assignees</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for task in task_list %}
+        {% ifchanged task.is_completed %}
+          {% if task.is_completed %}
+          <tr class="bg-light-lt">
+            <td colspan="5" class="text-center text-muted fw-bold text-uppercase small">Completed Tasks</td>
+          </tr>
+          {% endif %}
+        {% endifchanged %}
+        <tr>
+          <td>
+            <div><a href="{% url 'tracker:task-detail' pk=task.id %}">{{ task.name }}</a></div>
+            <div class="text-muted">{{ task.task_type.name }}</div>
+          </td>
+          <td>
+            {% if task.priority == 'URGENT' %}
+              <span class="badge bg-red-lt">Urgent</span>
+            {% elif task.priority == 'HIGH' %}
+              <span class="badge bg-orange-lt">High</span>
+            {% elif task.priority == 'MEDIUM' %}
+              <span class="badge bg-yellow-lt">Medium</span>
+            {% else %}
+              <span class="badge bg-secondary-lt">Low</span>
+            {% endif %}
+          </td>
+          <td>{{ task.deadline|date:"M. d, Y" }}</td>
+          <td>
+            <div class="avatar-list avatar-list-stacked">
+              {% for assignee in task.assignees.all|slice:":3" %}
+                <span class="avatar avatar-sm rounded-circle" style="background-image: url('https://ui-avatars.com/api/?name={{ assignee.first_name|first|default:'' }}{{ assignee.last_name|first|default:'' }}&background=random')"></span>
+              {% endfor %}
+              {% if task.assignees.all|length > 3 %}
+                <span class="avatar avatar-sm rounded-circle">+{{ task.assignees.all|length|add:"-3" }}</span>
+              {% endif %}
+            </div>
+          </td>
+          <td>
+            {% if task.is_completed %}
+              <span class="status status-success">
+                <span class="status-dot"></span>
+                Completed
+              </span>
+            {% else %}
+              <span class="status status-azure">
+                 <span class="status-dot status-dot-animated"></span>
+                In Progress
+              </span>
+            {% endif %}
+          </td>
+        </tr>
+      {% empty %}
+        <tr>
+          <td colspan="5">
+            <div class="empty">
+              <div class="empty-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clipboard-off" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5.575 5.597a2 2 0 0 0 -1.575 1.403v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-8m-4 -4h-2" /><path d="M9 5a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v2" /><path d="M3 3l18 18" /></svg>
+              </div>
+              <p class="empty-title">
+                {% if request.GET.name %}
+                  No tasks found matching your search
+                {% else %}
+                  No tasks have been created yet
+                {% endif %}
+              </p>
+              <p class="empty-subtitle text-muted">
+                Create a new task to see it listed here.
+              </p>
+              <div class="empty-action">
+                <a href="{% url 'tracker:task-create' %}" class="btn btn-primary">
+                  Create New Task
+                </a>
+              </div>
+            </div>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% if is_paginated %}
+    <div class="card-footer">
+      {% include "includes/pagination.html" %}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

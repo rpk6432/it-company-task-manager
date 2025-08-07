@@ -1,0 +1,50 @@
+{% load static %}
+{% load query_transform %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge"/>
+    <title>{% block title %}Dashboard{% endblock %} - IT Task Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0/dist/css/tabler.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0/dist/css/tabler-flags.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0/dist/css/tabler-payments.min.css" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0/dist/css/tabler-vendors.min.css" rel="stylesheet"/>
+    <style>
+      :root {
+        font-size: 18.4px;
+      }
+    </style>
+    {% block css %}{% endblock %}
+  </head>
+  <body >
+    <div class="page" style="min-height: auto;">
+      {% block sidebar %}
+        {% include "includes/sidebar.html" %}
+      {% endblock %}
+      <div class="page-wrapper">
+        <div class="page-header d-print-none">
+          <div class="container-xl">
+            <div class="row g-2 align-items-center">
+              <div class="col">
+                <h1 class="page-title">
+                  {% block page_title %}{% endblock %}
+                </h1>
+              </div>
+              {% block page_header_actions %}
+              {% endblock %}
+            </div>
+          </div>
+        </div>
+        <div class="page-body">
+          <div class="container-xl">
+            {% block content %}{% endblock %}
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0/dist/js/tabler.min.js" defer></script>
+    {% block javascript %}{% endblock %}
+  </body>
+</html>

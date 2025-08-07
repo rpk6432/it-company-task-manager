@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}{{ object|yesno:"Update Task,Create Task" }}{% endblock %}
+
+{% block page_title %}
+  {{ object|yesno:"Update Task,Create Task" }}
+{% endblock %}
+
+{% block content %}
+<div class="row">
+  <div class="col-lg-6">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {{ form|crispy }}
+      <div class="mt-4">
+        <button type="submit" class="btn btn-primary">Submit</button>
+        {% if object %}
+          <a href="{{ object.get_absolute_url }}" class="btn">Cancel</a>
+        {% else %}
+          <a href="{% url 'tracker:task-list' %}" class="btn">Cancel</a>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

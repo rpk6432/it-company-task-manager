@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block page_title %}
+  Dashboard
+{% endblock %}
+
+{% block content %}
+<div class="row row-cards">
+  <div class="col-12">
+    <div class="card card-md">
+      <div class="card-stamp card-stamp-lg">
+        <div class="card-stamp-icon bg-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l-2 0l9 -9l9 9l-2 0" /><path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" /><path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" /></svg>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-10">
+            <h3 class="h1">Welcome, {{ user.first_name|default:user.username }}!</h3>
+            <div class="markdown text-muted">
+              Here's an overview of your personal tasks and the current state of the system.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-6 col-lg-3">
+    <a href="{% url 'tracker:my-task-list' %}" class="card card-link card-link-pop">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-auto">
+            <span class="bg-primary text-white avatar"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clipboard-check" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 5h-2a2 2 0 0 0 -2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-12a2 2 0 0 0 -2 -2h-2" /><path d="M9 3m0 2a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v0a2 2 0 0 1 -2 2h-2a2 2 0 0 1 -2 -2z" /><path d="M9 14l2 2l4 -4" /></svg>
+            </span>
+          </div>
+          <div class="col">
+            <div class="font-weight-medium">{{ my_active_tasks_count }} My Active Tasks</div>
+            {% if my_overdue_tasks_count > 0 %}
+              <div class="text-muted">{{ my_overdue_tasks_count }} overdue</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="col-sm-6 col-lg-3">
+    <a href="{% url 'tracker:task-list' %}" class="card card-link card-link-pop">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-auto">
+            <span class="bg-blue-lt avatar"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-list-details" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M13 5h8" /><path d="M13 9h5" /><path d="M13 15h8" /><path d="M13 19h5" /><path d="M3 5h4m-2 2v-4" /><path d="M3 15h4m-2 2v-4" /></svg>
+            </span>
+          </div>
+          <div class="col">
+            <div class="font-weight-medium">{{ total_tasks_count }} Total Tasks</div>
+            <div class="text-muted">{{ completed_tasks_count }} completed</div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="col-sm-6 col-lg-3">
+    <a href="{% url 'tracker:worker-list' %}" class="card card-link card-link-pop">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-auto">
+            <span class="bg-green-lt avatar"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-users" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" /><path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /><path d="M21 21v-2a4 4 0 0 0 -3 -3.85" /></svg>
+            </span>
+          </div>
+          <div class="col">
+            <div class="font-weight-medium">{{ total_workers_count }} Workers</div>
+            <div class="text-muted">on the team</div>
+          </div>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="col-sm-6 col-lg-3">
+    <div class="card">
+      <div class="card-body">
+        <div class="row align-items-center">
+          <div class="col-auto">
+            <span class="bg-gray-lt avatar"><svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-circle-check" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M9 12l2 2l4 -4" /></svg>
+            </span>
+          </div>
+          <div class="col">
+            <div class="font-weight-medium">{{ completed_tasks_count }} Completed Tasks</div>
+            <div class="text-muted">in total</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">My Upcoming Deadlines</h3>
+      </div>
+      <div class="table-responsive">
+        <table class="table card-table table-vcenter">
+          <tbody>
+            {% for task in my_upcoming_deadlines %}
+              <tr>
+                <td>
+                  <div><a href="{% url 'tracker:task-detail' pk=task.id %}">{{ task.name }}</a></div>
+                  <div class="text-muted small mt-1">
+                    Priority:
+                    {% if task.priority == 'URGENT' %}
+                      <span class="badge bg-red-lt">Urgent</span>
+                    {% elif task.priority == 'HIGH' %}
+                      <span class="badge bg-orange-lt">High</span>
+                    {% elif task.priority == 'MEDIUM' %}
+                      <span class="badge bg-yellow-lt">Medium</span>
+                    {% else %}
+                      <span class="badge bg-secondary-lt">Low</span>
+                    {% endif %}
+                  </div>
+                </td>
+                <td class="text-end text-muted">{{ task.deadline|date:"M. d, Y" }}</td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="2">
+                  <div class="empty">
+                    <div class="empty-icon">
+                      <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-calendar-check" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M11.5 21h-5.5a2 2 0 0 1 -2 -2v-12a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v6" /><path d="M16 3v4" /><path d="M8 3v4" /><path d="M4 11h16" /><path d="M15 19l2 2l4 -4" /></svg>
+                    </div>
+                    <p class="empty-title">You're all caught up!</p>
+                    <p class="empty-subtitle text-muted">You have no upcoming deadlines.</p>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
