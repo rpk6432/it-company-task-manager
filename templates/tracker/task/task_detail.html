@@ -2,58 +2,108 @@
 
 {% block title %}{{ task.name }}{% endblock %}
 
+{% block page_title %}
+  Task Details
+{% endblock %}
+
+{% block page_header_actions %}
+<div class="col-auto ms-auto d-print-none">
+  <form action="{% url 'tracker:task-toggle-status' pk=task.id %}" method="post" class="d-inline-block">
+    {% csrf_token %}
+    {% if task.is_completed %}
+      <button type="submit" class="btn btn-warning">Re-open Task</button>
+    {% else %}
+      <button type="submit" class="btn btn-success">Complete Task</button>
+    {% endif %}
+  </form>
+  <a href="{% url 'tracker:task-update' pk=task.id %}" class="btn btn-secondary">Update</a>
+  <a href="{% url 'tracker:task-delete' pk=task.id %}" class="btn btn-danger">Delete</a>
+</div>
+{% endblock %}
+
 {% block content %}
-  <h1>
-    {{ task.name }}
-    <a href="{% url 'tracker:task-delete' pk=task.id %}" class="btn btn-danger float-end">Delete</a>
-    <a href="{% url 'tracker:task-update' pk=task.id %}" class="btn btn-secondary float-end me-2">Update</a>
-
-    <form action="{% url 'tracker:task-toggle-status' pk=task.id %}" method="post" class="float-end me-2">
-      {% csrf_token %}
-      {% if task.is_completed %}
-        <button type="submit" class="btn btn-warning">Re-open Task</button>
-      {% else %}
-        <button type="submit" class="btn btn-success">Complete Task</button>
-      {% endif %}
-    </form>
-
-  </h1>
-
-  <div class="card mt-4">
-    <div class="card-body">
-      <h5 class="card-title">Task Details</h5>
-      <ul class="list-group list-group-flush">
-        <li class="list-group-item"><strong>Type:</strong> {{ task.task_type.name }}</li>
-        <li class="list-group-item"><strong>Deadline:</strong> {{ task.deadline }}</li>
-        <li class="list-group-item"><strong>Priority:</strong> {{ task.get_priority_display }}</li>
-        <li class="list-group-item"><strong>Status:</strong>
-          {% if task.is_completed %}
-            Completed
-          {% else %}
-            In Progress
-          {% endif %}
-        </li>
-        <li class="list-group-item">
-          <strong>Description:</strong>
-          <p class="mt-2">{{ task.description|linebreaks }}</p>
-        </li>
-      </ul>
+<div class="row g-4">
+  <div class="col-lg-4">
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Task Info</h3>
+      </div>
+      <div class="card-body">
+        <dl class="row">
+          <dt class="col-5">Priority:</dt>
+          <dd class="col-7">
+            {% if task.priority == 'URGENT' %}
+              <span class="badge bg-red-lt">Urgent</span>
+            {% elif task.priority == 'HIGH' %}
+              <span class="badge bg-orange-lt">High</span>
+            {% elif task.priority == 'MEDIUM' %}
+              <span class="badge bg-yellow-lt">Medium</span>
+            {% else %}
+              <span class="badge bg-secondary-lt">Low</span>
+            {% endif %}
+          </dd>
+          <dt class="col-5">Deadline:</dt>
+          <dd class="col-7">{{ task.deadline|date:"M. d, Y" }}</dd>
+          <dt class="col-5">Status:</dt>
+          <dd class="col-7">
+            {% if task.is_completed %}
+              <span class="status status-success">
+                <span class="status-dot"></span>
+                Completed
+              </span>
+            {% else %}
+              <span class="status status-azure">
+                <span class="status-dot status-dot-animated"></span>
+                In Progress
+              </span>
+            {% endif %}
+          </dd>
+          <dt class="col-5">Type:</dt>
+          <dd class="col-7">{{ task.task_type.name }}</dd>
+        </dl>
+      </div>
     </div>
   </div>
-
-  <div class="card mt-4">
-    <div class="card-body">
-      <h5 class="card-title">Assignees</h5>
-      <ul class="list-group list-group-flush">
-        {% for assignee in task.assignees.all %}
-          <li class="list-group-item">
-            {{ assignee.first_name }} {{ assignee.last_name }} ({{ assignee.username }}) -
-            <strong>{{ assignee.position.name }}</strong>
-          </li>
-        {% empty %}
-          <li class="list-group-item">No one is assigned to this task.</li>
-        {% endfor %}
-      </ul>
+  <div class="col-lg-8">
+    <div class="card mb-4">
+      <div class="card-header">
+        <h3 class="card-title">{{ task.name }}</h3>
+      </div>
+      <div class="card-body">
+        {{ task.description|linebreaks }}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title">Assigned Workers</h3>
+      </div>
+      <div class="table-responsive">
+        <table class="table card-table table-vcenter">
+          <tbody>
+            {% for assignee in task.assignees.all %}
+              <tr>
+                <td>
+                  <div class="d-flex py-1 align-items-center">
+                    <span class="avatar me-2" style="background-image: url('https://ui-avatars.com/api/?name={{ assignee.first_name|first|default:'' }}{{ assignee.last_name|first|default:'' }}&background=random&size=128')"></span>
+                    <div class="flex-fill">
+                      <div class="font-weight-medium"><a href="{{ assignee.get_absolute_url }}">{{ assignee.username }}</a></div>
+                      <div class="text-muted">{{ assignee.first_name }} {{ assignee.last_name }}</div>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  {{ assignee.position.name }}
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="2" class="text-center text-muted py-4">No one is assigned to this task.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
+</div>
 {% endblock %}
